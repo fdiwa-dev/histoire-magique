@@ -1,0 +1,6 @@
+{
+  "name": "Histoire Magique",
+  "description": "Générateur d'histoires illustrées personnalisées pour enfants avec un flipbook interactif magique.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

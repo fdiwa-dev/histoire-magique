@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+}
+
+/* Custom classes for magic scroll and flipbook elements */
+.perspective-1000 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* ─── Mode accessibilité : Contraste élevé ─── */
+.high-contrast #housing_app {
+  --hc-bg: #000 !important;
+  --hc-text: #fff !important;
+  --hc-link: #ffeb3b !important;
+  --hc-accent: #ff9800 !important;
+  --hc-border: #fff !important;
+}
+
+.high-contrast .bg-slate-950,
+.high-contrast .bg-slate-900,
+.high-contrast .bg-indigo-950,
+.high-contrast .bg-purple-950,
+.high-contrast .bg-slate-800,
+.high-contrast .bg-slate-900\/40,
+.high-contrast .bg-slate-950\/40 {
+  background-color: #000 !important;
+}
+
+.high-contrast .text-slate-100,
+.high-contrast .text-slate-200,
+.high-contrast .text-slate-300,
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500,
+.high-contrast .text-purple-200,
+.high-contrast .text-purple-300,
+.high-contrast .text-indigo-200 {
+  color: #fff !important;
+}
+
+.high-contrast .text-amber-400 {
+  color: #ffeb3b !important;
+}
+
+.high-contrast .border,
+.high-contrast .border-purple-500\/10,
+.high-contrast .border-purple-500\/20,
+.high-contrast .border-slate-700,
+.high-contrast .border-slate-900 {
+  border-color: #fff !important;
+  border-width: 2px !important;
+}
+
+.high-contrast button,
+.high-contrast a,
+.high-contrast [role="button"] {
+  outline: 2px solid #ffeb3b !important;
+  outline-offset: 2px;
+}
+
+.high-contrast button:focus-visible,
+.high-contrast a:focus-visible {
+  outline: 3px solid #fff !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #000 !important;
+}
+
+/* ─── Mode grand texte ─── */
+.text-2xl #housing_app p {
+  font-size: 1.5rem !important;
+  line-height: 1.6 !important;
+}
+
+.text-2xl #housing_app h1 {
+  font-size: 2.5rem !important;
+}
+
+.text-2xl #housing_app button,
+.text-2xl #housing_app a {
+  font-size: 1.1rem !important;
+}
+
+/* ─── Lecteur audio focus visible ─── */
+[aria-label*="lecture"]:focus-visible,
+[aria-label*="audio"]:focus-visible {
+  outline: 3px solid #f59e0b !important;
+  outline-offset: 2px;
+}
+
+/* ─── Animations réduites pour les utilisateurs sensibles ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbar to look magical and sleek */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.6);
+}
