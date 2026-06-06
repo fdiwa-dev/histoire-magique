@@ -68,8 +68,8 @@ export default function App() {
     // Liens Lemon Squeezy directs
     const LINKS: Record<string, string> = {
       "Option PDF HD - Histoire Générée": "https://miniqueue.lemonsqueezy.com/checkout/buy/6178d682-2bbb-496d-b993-e3b40fa307f3",
-      "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/2f5abf23-a73a-4730-8a7a-23c1540285ea",
-      "Pack Duo Impérial (2 Livres)": "https://miniqueue.lemonsqueezy.com/checkout/buy/eecc1ed4-0cb8-4621-969b-56513010ab5f",
+      "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/eecc1ed4-0cb8-4621-969b-56513010ab5f",
+      "Pack Duo Impérial (2 Livres)": "https://miniqueue.lemonsqueezy.com/checkout/buy/2f5abf23-a73a-4730-8a7a-23c1540285ea",
     };
     const url = LINKS[planName];
     if (url) {
