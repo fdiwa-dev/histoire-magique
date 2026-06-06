@@ -67,9 +67,9 @@ export default function App() {
   const triggerPaymentFlow = (planName: string, price: string) => {
     // Liens Lemon Squeezy directs
     const LINKS: Record<string, string> = {
-      "Option PDF HD - Histoire Générée": "https://miniqueue.lemonsqueezy.com/checkout/buy/d90ebfd4-babe-4a68-877c-513ed43b2d07",
-      "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/a6640f74-7de4-4f9e-bd44-c32133849857",
-      "Pack Duo Impérial (2 Livres)": "https://miniqueue.lemonsqueezy.com/checkout/buy/a6640f74-7de4-4f9e-bd44-c32133849857",
+      "Option PDF HD - Histoire Générée": "https://miniqueue.lemonsqueezy.com/checkout/buy/6178d682-2bbb-496d-b993-e3b40fa307f3",
+      "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/2f5abf23-a73a-4730-8a7a-23c1540285ea",
+      "Pack Duo Impérial (2 Livres)": "https://miniqueue.lemonsqueezy.com/checkout/buy/eecc1ed4-0cb8-4621-969b-56513010ab5f",
     };
     const url = LINKS[planName];
     if (url) {
