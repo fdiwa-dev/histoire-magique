@@ -4,7 +4,7 @@ import { generateStory, EXAMPLE_STORIES } from './data/stories';
 import StoryForm from './components/StoryForm';
 import LoadingScreen from './components/LoadingScreen';
 import Flipbook from './components/Flipbook';
-import PaymentModal from './components/PaymentModal';
+
 import AccessibilityControls, { type AccessibilitySettings } from './components/AccessibilityControls';
 import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCheck, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -65,9 +65,16 @@ export default function App() {
   };
 
   const triggerPaymentFlow = (planName: string, price: string) => {
-    setPaymentPlan(planName);
-    setPaymentPrice(price);
-    setIsPaymentOpen(true);
+    // Liens Lemon Squeezy directs
+    const LINKS: Record<string, string> = {
+      "Option PDF HD - Histoire Générée": "https://miniqueue.lemonsqueezy.com/checkout/buy/d90ebfd4-babe-4a68-877c-513ed43b2d07",
+      "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/a6640f74-7de4-4f9e-bd44-c32133849857",
+      "Pack Duo Impérial (2 Livres)": "https://miniqueue.lemonsqueezy.com/checkout/buy/a6640f74-7de4-4f9e-bd44-c32133849857",
+    };
+    const url = LINKS[planName];
+    if (url) {
+      window.open(url, '_blank');
+    }
   };
 
   // Mock testimonies data in French
@@ -648,13 +655,7 @@ export default function App() {
       {/* Panneau d'accessibilité flottant pour tous les états */}
       <AccessibilityControls onSettingsChange={handleAccessibilityChange} />
 
-      {/* MOCK CHECKOUT MODAL CONTAINER */}
-      <PaymentModal
-        isOpen={isPaymentOpen}
-        onClose={() => setIsPaymentOpen(false)}
-        planName={paymentPlan}
-        price={paymentPrice}
-      />
+
     </div>
   );
 }
