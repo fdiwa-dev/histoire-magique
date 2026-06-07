@@ -14,58 +14,64 @@ interface DownloadPDFProps {
 export default function DownloadPDF({ story }: DownloadPDFProps) {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDownload = async () => {
     setLoading(true);
     setDone(false);
+    setError(null);
 
     try {
-      const html2pdf = (await import('html2pdf.js')).default;
+      const mod = await import('html2pdf.js');
+      const html2pdf = mod.default || (mod as any).html2pdf || (mod as any);
       const filename = `${story.title.replace(/[^a-zA-Z0-9\u00C0-\u024F\s-]/g, '').trim().replace(/\s+/g, '_')}.pdf`;
 
       // Conteneur temporaire pour le rendu PDF
       const container = document.createElement('div');
       container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;';
-      container.innerHTML = getPDFHTML(story);
+      innerHTML = getPDFHTML(story);
       document.body.appendChild(container);
 
       // Attendre le rendu
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, 1000));
 
       // Générer le PDF
-      const blob = await html2pdf()
-        .set({
-          margin: [0, 0, 0, 0],
-          filename,
-          image: { type: 'jpeg', quality: 0.9 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            letterRendering: true,
-            backgroundColor: '#0f172a',
-            logging: false,
-          },
-          jsPDF: {
-            unit: 'px',
-            format: [800, 1100],
-            orientation: 'portrait',
-          },
-        })
-        .from(container)
-        .outputPdf('blob');
+      const worker = html2pdf().set({
+        margin: [0, 0, 0, 0],
+        filename,
+        image: { type: 'jpeg', quality: 0.9 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          backgroundColor: '#0f172a',
+          logging: false,
+        },
+        jsPDF: {
+          unit: 'px',
+          format: [800, 1100],
+          orientation: 'portrait',
+        },
+      }).from(container);
+
+      const blob = await worker.outputPdf('blob');
 
       // Télécharger
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = filename;
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
 
       document.body.removeChild(container);
       setDone(true);
       setTimeout(() => setDone(false), 3000);
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg);
       console.error('PDF error:', err);
     } finally {
       setLoading(false);
@@ -73,24 +79,31 @@ export default function DownloadPDF({ story }: DownloadPDFProps) {
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      disabled={loading}
-      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
-        done
-          ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 scale-105'
-          : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl'
-      } disabled:opacity-60 disabled:cursor-wait`}
-      aria-label="Télécharger l'histoire au format PDF"
-    >
-      {loading ? (
-        <><Loader2 className="w-4 h-4 animate-spin" /> Génération PDF...</>
-      ) : done ? (
-        <><Check className="w-4 h-4" /> Téléchargé !</>
-      ) : (
-        <><FileText className="w-4 h-4" /> Télécharger PDF ({story.pages.length} pages)</>
+    <>
+      <button
+        onClick={handleDownload}
+        disabled={loading}
+        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+          done
+            ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 scale-105'
+            : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl'
+        } disabled:opacity-60 disabled:cursor-wait`}
+        aria-label="Télécharger l'histoire au format PDF"
+      >
+        {loading ? (
+          <><Loader2 className="w-4 h-4 animate-spin" /> Génération PDF...</>
+        ) : done ? (
+          <><Check className="w-4 h-4" /> Téléchargé !</>
+        ) : (
+          <><FileText className="w-4 h-4" /> Télécharger PDF ({story.pages.length} pages)</>
+        )}
+      </button>
+      {error && (
+        <p className="text-[10px] text-red-400 mt-1 text-center">
+          ⚠️ Erreur : {error}
+        </p>
       )}
-    </button>
+    </>
   );
 }
 
