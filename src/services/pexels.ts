@@ -27,85 +27,134 @@ interface PexelsResponse {
   per_page: number;
 }
 
-const THEME_KEYWORDS: Record<string, (scene: string, childName: string) => string> = {
-  space: (_scene, _name) => {
-    // Generic queries by scene type — Pexels has great space/astronaut photos
-    const map: Record<string, string> = {
-      cover: 'astronaut costume child space adventure orange background',
-      intro: 'child looking at stars night sky wonder',
-      launch: 'rocket launch fire smoke dramatic sky',
-      moon: 'full moon bright night sky landscape',
-      alien: 'colorful toy alien figure close up',
-      earth: 'planet earth from space blue atmosphere',
-      starfall: 'starry night sky milky way landscape magical',
-      moral: 'child sleeping under starry night peaceful',
-    };
-    return map[_scene] || 'space stars planets nebula colorful universe';
+type StyleSuffix = Record<string, string>;
+
+const STYLE_SUFFIXES: Record<string, StyleSuffix> = {
+  Aquarelle: {
+    default: 'watercolor painting soft pastel artistic',
+    forest: 'watercolor forest landscape soft pastel dreamy',
+    space: 'watercolor space nebula stars soft pastel artistic',
+    pirate: 'watercolor ocean sunset sailing soft pastel',
+    dragon: 'watercolor fantasy mystical soft pastel painting',
+    robot: 'watercolor robot whimsical soft pastel artwork',
   },
-  pirate: (_scene, _name) => {
-    const map: Record<string, string> = {
-      cover: 'pirate costume child playing adventure outdoors',
-      intro: 'child looking at ocean horizon sunset adventure',
-      parrot: 'colorful macaw parrot sitting on branch',
-      map: 'old ancient treasure map parchment paper close up',
-      island: 'tropical island beach palm trees turquoise water',
-      cave: 'dark cave entrance rocks nature landscape',
-      storm: 'big ocean waves storm dramatic dark sky',
-      moral: 'sunset beach golden hour peaceful ocean',
-    };
-    return map[_scene] || 'pirate ship ocean adventure tropical';
+  BD: {
+    default: 'comic book style colorful vibrant high contrast',
+    forest: 'comic jungle adventure vibrant colorful art',
+    space: 'comic space superhero colorful pop art',
+    pirate: 'comic pirate adventure colorful illustration style',
+    dragon: 'comic fantasy dragon vibrant colorful pop art',
+    robot: 'comic robot sci-fi colorful vibrant cartoon style',
   },
-  dragon: (_scene, _name) => {
-    const map: Record<string, string> = {
-      cover: 'dragon toy figurine mythical creature close up',
-      nest: 'egg in nest nature warm sunlight',
-      hatch: 'baby chicken hatching egg new life cute',
-      sad: 'child sad disappointed rainy window',
-      flight: 'bird flying above mountains clouds freedom',
-      block: 'large boulder rock nature landscape river',
-      laugh: 'child laughing happy playing meadow sunlight',
-      bloom: 'beautiful flower blooming close up magical light',
-      moral: 'sunset mountains friends silhouette peaceful',
-    };
-    return map[_scene] || 'fantasy dragon mythical creature colorful art';
+  'Pixel Art': {
+    default: 'vintage retro nostalgic game color blocks',
+    forest: 'vintage retro nature pixelated colorful blocks',
+    space: 'vintage retro space game colorful blocks',
+    pirate: 'vintage retro pirate adventure colorful',
+    dragon: 'vintage retro fantasy creature colorful',
+    robot: 'vintage retro robot technicolor game',
   },
-  robot: (_scene, _name) => {
-    const map: Record<string, string> = {
-      cover: 'robot toy colorful cute modern technology',
-      discover: 'child discovering nature curious exploring garden',
-      dream: 'child looking out window thoughtful dreaming',
-      dry: 'paintbrush art supplies creative studio desk',
-      berries: 'colorful fresh berries fruit bowls vibrant',
-      paint: 'child painting colorful art creativity studio',
-      alive: 'magical tree glowing lights fantasy forest',
-      happy: 'happy child laughing playing colorful garden',
-      moral: 'child and parent creating art together workshop',
-    };
-    return map[_scene] || 'robot technology kids play creative learning';
+  Crayon: {
+    default: 'pencil sketch drawing artistic texture paper',
+    forest: 'pencil sketch forest landscape drawing',
+    space: 'pencil sketch space stars drawing artistic',
+    pirate: 'pencil sketch pirate ship ocean drawing',
+    dragon: 'pencil sketch fantasy dragon creature drawing',
+    robot: 'pencil sketch robot mechanical drawing',
   },
-  forest: (_scene, _name) => {
-    const map: Record<string, string> = {
-      cover: 'enchanted forest magical path sunlight trees nature',
-      intro: 'child walking in forest path sunlight adventure',
-      squirrel: 'cute squirrel holding acorn in forest nature',
-      river: 'small forest river stream clear water nature',
-      fox: 'beautiful red fox in forest wildlife nature',
-      mushroom: 'colorful mushrooms glowing moss forest floor',
-      fairy: 'fairy lights glowing in dark forest magical',
-      dance: 'butterfly flower meadow spring colorful nature',
-      moral: 'child sleeping peaceful nature forest bed',
-    };
-    return map[_scene] || 'magical forest nature beautiful landscape';
+  Réaliste: {
+    default: 'photograph realistic nature vibrant colors',
+    forest: 'enchanted forest magical path sunlight photograph',
+    space: 'astronaut space stars realistic photography',
+    pirate: 'pirate ship ocean realistic photograph',
+    dragon: 'dragon lizard reptile realistic close up photography',
+    robot: 'robot technology realistic modern photography',
   },
 };
 
-const sceneToKeyword = (themeId: string, sceneType: string, childName: string): string => {
+const THEME_KEYWORDS: Record<string, (scene: string, style: string, childName: string) => string> = {
+  space: (scene, style, _name) => {
+    const suffix = STYLE_SUFFIXES[style]?.space || STYLE_SUFFIXES[style]?.default || '';
+    const map: Record<string, string> = {
+      cover: `astronaut spacesuit child space ${suffix}`,
+      intro: `child looking at stars night sky wonder ${suffix}`,
+      launch: `rocket launch fire smoke dramatic sky ${suffix}`,
+      moon: `full moon bright night sky ${suffix}`,
+      alien: `colorful alien figure close up ${suffix}`,
+      earth: `planet earth globe atmosphere ${suffix}`,
+      starfall: `starry night sky milky way magical ${suffix}`,
+      moral: `child sleeping stars night peaceful ${suffix}`,
+    };
+    return map[scene] || `space stars planets universe ${suffix}`;
+  },
+  pirate: (scene, style, _name) => {
+    const suffix = STYLE_SUFFIXES[style]?.pirate || STYLE_SUFFIXES[style]?.default || '';
+    const map: Record<string, string> = {
+      cover: `pirate captain costume adventure ${suffix}`,
+      intro: `ocean horizon sunset sea ${suffix}`,
+      parrot: `colorful macaw parrot bird ${suffix}`,
+      map: `old ancient treasure map parchment ${suffix}`,
+      island: `tropical island beach palm trees ${suffix}`,
+      cave: `dark cave entrance rocks nature ${suffix}`,
+      storm: `ocean waves storm dramatic sky ${suffix}`,
+      moral: `sunset beach peaceful ocean ${suffix}`,
+    };
+    return map[scene] || `pirate ship ocean adventure ${suffix}`;
+  },
+  dragon: (scene, style, _name) => {
+    const suffix = STYLE_SUFFIXES[style]?.dragon || STYLE_SUFFIXES[style]?.default || '';
+    const map: Record<string, string> = {
+      cover: `dragon figurine mythical creature ${suffix}`,
+      nest: `egg in nest warm nature sunlight ${suffix}`,
+      hatch: `baby animal hatching egg life cute ${suffix}`,
+      sad: `child sad thoughtful emotion ${suffix}`,
+      flight: `bird flying mountains clouds freedom ${suffix}`,
+      block: `large rock boulder nature landscape ${suffix}`,
+      laugh: `child laughing playing meadow happy ${suffix}`,
+      bloom: `beautiful flower blooming macro ${suffix}`,
+      moral: `sunset mountains silhouette peaceful ${suffix}`,
+    };
+    return map[scene] || `fantasy dragon mythical creature ${suffix}`;
+  },
+  robot: (scene, style, _name) => {
+    const suffix = STYLE_SUFFIXES[style]?.robot || STYLE_SUFFIXES[style]?.default || '';
+    const map: Record<string, string> = {
+      cover: `robot toy cute technology ${suffix}`,
+      discover: `child discovering nature exploring garden ${suffix}`,
+      dream: `child looking out window dreaming ${suffix}`,
+      dry: `paintbrush art supplies creative studio ${suffix}`,
+      berries: `colorful berries fruit bowls vibrant ${suffix}`,
+      paint: `child painting colorful art creating ${suffix}`,
+      alive: `magical tree glowing lights fantasy ${suffix}`,
+      happy: `child laughing playing garden joy ${suffix}`,
+      moral: `child parent creating art together ${suffix}`,
+    };
+    return map[scene] || `robot technology kids creative ${suffix}`;
+  },
+  forest: (scene, style, _name) => {
+    const suffix = STYLE_SUFFIXES[style]?.forest || STYLE_SUFFIXES[style]?.default || '';
+    const map: Record<string, string> = {
+      cover: `enchanted forest magical nature beautiful ${suffix}`,
+      intro: `child forest path sunlight adventure ${suffix}`,
+      squirrel: `cute squirrel acorn forest ${suffix}`,
+      river: `small forest river stream water ${suffix}`,
+      fox: `beautiful red fox forest wildlife ${suffix}`,
+      mushroom: `colorful mushrooms glowing moss forest ${suffix}`,
+      fairy: `fairy lights glowing nature magical ${suffix}`,
+      dance: `butterflies flowers meadow spring ${suffix}`,
+      moral: `child sleeping peaceful nature forest ${suffix}`,
+    };
+    return map[scene] || `magical forest nature landscape ${suffix}`;
+  },
+};
+
+const sceneToKeyword = (themeId: string, sceneType: string, style: string, childName: string): string => {
   const keywordFn = THEME_KEYWORDS[themeId];
   if (!keywordFn) {
     return `magical children story ${childName} colorful illustration`;
   }
   const sceneName = sceneType.replace(`${themeId}_`, '');
-  return keywordFn(sceneName, childName);
+  return keywordFn(sceneName, style, childName);
 };
 
 class PexelsImageProvider {
@@ -143,8 +192,8 @@ class PexelsImageProvider {
     }
   }
 
-  async getPageImage(themeId: string, sceneType: string, childName: string): Promise<{ url: string; photographer: string; photographerUrl: string; alt: string } | null> {
-    const query = sceneToKeyword(themeId, sceneType, childName);
+  async getPageImage(themeId: string, sceneType: string, childName: string, style: string = 'Réaliste'): Promise<{ url: string; photographer: string; photographerUrl: string; alt: string } | null> {
+    const query = sceneToKeyword(themeId, sceneType, style, childName);
     const photo = await this.search(query);
 
     if (!photo) return null;
@@ -158,11 +207,12 @@ class PexelsImageProvider {
   }
 
   /** Preload all images for a story in parallel */
-  async preloadStoryImages(story: { themeId: string; pages: { sceneType: string }[]; heroName: string }): Promise<Map<number, { url: string; photographer: string; photographerUrl: string; alt: string }>> {
+  async preloadStoryImages(story: { themeId: string; pages: { sceneType: string }[]; heroName: string; style?: string }): Promise<Map<number, { url: string; photographer: string; photographerUrl: string; alt: string }>> {
     const results = new Map<number, { url: string; photographer: string; photographerUrl: string; alt: string }>();
+    const style = story.style || 'Réaliste';
     const queries = story.pages.map((page, idx) => ({
       idx,
-      query: sceneToKeyword(story.themeId, page.sceneType, story.heroName),
+      query: sceneToKeyword(story.themeId, page.sceneType, style, story.heroName),
     }));
 
     // Batch: up to 4 parallel requests

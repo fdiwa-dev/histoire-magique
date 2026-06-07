@@ -32,7 +32,7 @@ export default function StoryIllustrationWithPexels({
     setUseFallback(false);
 
     pexelsProvider
-      .getPageImage(themeId, sceneType, childName)
+      .getPageImage(themeId, sceneType, childName, style)
       .then((img) => {
         if (cancelled) return;
         if (img) {
@@ -53,7 +53,7 @@ export default function StoryIllustrationWithPexels({
     return () => {
       cancelled = true;
     };
-  }, [themeId, sceneType, childName]);
+  }, [themeId, sceneType, childName, style]);
 
   if (loading) {
     return (
