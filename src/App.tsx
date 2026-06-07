@@ -19,7 +19,9 @@ declare global {
 }
 
 export default function App() {
-  const { premium: userPremium } = useAuth();
+  const { premium: authPremium, user } = useAuth();
+  // Admin bypass : si l'email admin est connecté, premium = true
+  const userPremium = authPremium || (user?.email === 'fdiwaassisstantbot@gmail.com');
   const [appState, setAppState] = useState<'HOME' | 'LOADING' | 'STORY'>('HOME');
   const [generatedStory, setGeneratedStory] = useState<Story | null>(null);
 
