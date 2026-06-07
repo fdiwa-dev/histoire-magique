@@ -28,73 +28,74 @@ interface PexelsResponse {
 }
 
 const THEME_KEYWORDS: Record<string, (scene: string, childName: string) => string> = {
-  space: (scene, name) => {
+  space: (_scene, _name) => {
+    // Generic queries by scene type — Pexels has great space/astronaut photos
     const map: Record<string, string> = {
-      cover: `${name} child astronaut space rocket cartoon illustration`,
-      intro: `child astronaut floating in space colorful cartoon`,
-      launch: `rocket launching into space stars planets`,
-      moon: `child on moon surface looking at earth cartoon`,
-      alien: `friendly alien character colorful cartoon space`,
-      earth: `planet earth from space stars colorful`,
-      starfall: `shooting star meteor shower night sky magic`,
-      moral: `child sleeping under stars peaceful night`,
+      cover: 'astronaut costume child space adventure orange background',
+      intro: 'child looking at stars night sky wonder',
+      launch: 'rocket launch fire smoke dramatic sky',
+      moon: 'full moon bright night sky landscape',
+      alien: 'colorful toy alien figure close up',
+      earth: 'planet earth from space blue atmosphere',
+      starfall: 'starry night sky milky way landscape magical',
+      moral: 'child sleeping under starry night peaceful',
     };
-    return map[scene] || `${name} space adventure magic colorful illustration for kids`;
+    return map[_scene] || 'space stars planets nebula colorful universe';
   },
-  pirate: (scene, name) => {
+  pirate: (_scene, _name) => {
     const map: Record<string, string> = {
-      cover: `${name} pirate captain adventure ship treasure map cartoon`,
-      intro: `cute pirate boy or girl with map looking at horizon`,
-      parrot: `colorful parrot sitting on pirate shoulder jungle`,
-      map: `old treasure map with red X pirate adventure`,
-      island: `tropical island with palm trees pirate ship cartoon`,
-      cave: `dark cave with treasure chest gold coins glowing`,
-      storm: `pirate ship in big storm waves ocean dramatic`,
-      moral: `pirate and friends sharing treasure happy sunset`,
+      cover: 'pirate costume child playing adventure outdoors',
+      intro: 'child looking at ocean horizon sunset adventure',
+      parrot: 'colorful macaw parrot sitting on branch',
+      map: 'old ancient treasure map parchment paper close up',
+      island: 'tropical island beach palm trees turquoise water',
+      cave: 'dark cave entrance rocks nature landscape',
+      storm: 'big ocean waves storm dramatic dark sky',
+      moral: 'sunset beach golden hour peaceful ocean',
     };
-    return map[scene] || `pirate adventure ${name} cartoon illustration for kids`;
+    return map[_scene] || 'pirate ship ocean adventure tropical';
   },
-  dragon: (scene, name) => {
+  dragon: (_scene, _name) => {
     const map: Record<string, string> = {
-      cover: `friendly green dragon with child flying over mountains magical illustration`,
-      nest: `dragon egg glowing in nest magic forest`,
-      hatch: `baby dragon hatching from egg cute fantasy`,
-      sad: `sad dragon with droopy wings in magical forest`,
-      flight: `child riding friendly dragon flying above clouds`,
-      block: `large stone blocking waterfall stream dragon landscape`,
-      laugh: `dragon laughing happy playing with child meadow`,
-      bloom: `magical flower blooming moonlight fantasy glow`,
-      moral: `dragon and child watching stars night sky friendship`,
+      cover: 'dragon toy figurine mythical creature close up',
+      nest: 'egg in nest nature warm sunlight',
+      hatch: 'baby chicken hatching egg new life cute',
+      sad: 'child sad disappointed rainy window',
+      flight: 'bird flying above mountains clouds freedom',
+      block: 'large boulder rock nature landscape river',
+      laugh: 'child laughing happy playing meadow sunlight',
+      bloom: 'beautiful flower blooming close up magical light',
+      moral: 'sunset mountains friends silhouette peaceful',
     };
-    return map[scene] || `magical dragon fantasy ${name} children book illustration`;
+    return map[_scene] || 'fantasy dragon mythical creature colorful art';
   },
-  robot: (scene, name) => {
+  robot: (_scene, _name) => {
     const map: Record<string, string> = {
-      cover: `friendly robot child workshop gears colorful kids illustration`,
-      discover: `cute rusty robot discovering world nature colorful`,
-      dream: `robot looking out window dreaming of colors`,
-      dry: `paintbrushes art supplies on table creative studio`,
-      berries: `bowls of colorful fruit puree natural vibrant`,
-      paint: `robot painting colorful canvas splashing paint`,
-      alive: `magical tree growing from painting glowing leaves fantasy`,
-      happy: `happy robot with glowing heart surrounded by flowers`,
-      moral: `robot and child creating art together colorful workshop`,
+      cover: 'robot toy colorful cute modern technology',
+      discover: 'child discovering nature curious exploring garden',
+      dream: 'child looking out window thoughtful dreaming',
+      dry: 'paintbrush art supplies creative studio desk',
+      berries: 'colorful fresh berries fruit bowls vibrant',
+      paint: 'child painting colorful art creativity studio',
+      alive: 'magical tree glowing lights fantasy forest',
+      happy: 'happy child laughing playing colorful garden',
+      moral: 'child and parent creating art together workshop',
     };
-    return map[scene] || `friendly robot adventure ${name} colorful kids art`;
+    return map[_scene] || 'robot technology kids play creative learning';
   },
-  forest: (scene, name) => {
+  forest: (_scene, _name) => {
     const map: Record<string, string> = {
-      cover: `enchanted forest with ${name} child magical trees sunlight`,
-      intro: `child walking into magical forest with animals cartoon`,
-      squirrel: `friendly squirrel holding acorn in forest`,
-      river: `small river stream in enchanted forest magic glow`,
-      fox: `friendly fox in forest path magical atmosphere`,
-      mushroom: `glowing mushrooms in dark enchanted forest`,
-      fairy: `fairy with wings sitting on flower in forest`,
-      dance: `forest animals dancing in circle magical moonlight`,
-      moral: `child sleeping in forest surrounded by glowing animals`,
+      cover: 'enchanted forest magical path sunlight trees nature',
+      intro: 'child walking in forest path sunlight adventure',
+      squirrel: 'cute squirrel holding acorn in forest nature',
+      river: 'small forest river stream clear water nature',
+      fox: 'beautiful red fox in forest wildlife nature',
+      mushroom: 'colorful mushrooms glowing moss forest floor',
+      fairy: 'fairy lights glowing in dark forest magical',
+      dance: 'butterfly flower meadow spring colorful nature',
+      moral: 'child sleeping peaceful nature forest bed',
     };
-    return map[scene] || `magical forest ${name} children story illustration`;
+    return map[_scene] || 'magical forest nature beautiful landscape';
   },
 };
 
