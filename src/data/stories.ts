@@ -21,21 +21,21 @@ const DESCRIPTIONS_VISUELLES: Record<string, string> = {
   'pirate_treasure': 'Un coffre en bois débordant de pièces d\'or, un livre magique s\'en échappe aux pages illuminées.',
   'pirate_moral': 'Le navire rentre au port au coucher du soleil, le capitaine et le perroquet regardent l\'horizon, heureux.',
   'dragon_cover': 'Couverture : un majestueux dragon émeraude aux ailes déployées plane au-dessus d\'une vallée brumeuse.',
-  'dragon_egg': 'Un œuf orange et rouge dans un nid de feuilles dans une grotte, la coquille parcourue de veines lumineuses.',
-  'dragon_chase': 'Un petit dragon court après un papillon lumineux dans une prairie fleurie, ses petites ailes battent joyeusement.',
-  'dragon_fly': 'Le dragon déploie ses grandes ailes et s\'élance dans le ciel bleu pommelé de nuages blancs pour la première fois.',
-  'dragon_hunt': 'Le dragon survole une forêt dense à la recherche d\'un trésor perdu, ses yeux dorés brillent dans la pénombre.',
-  'dragon_brave': 'Face à un pont de pierre branlant au-dessus d\'un ravin, le dragon prend son courage et avance.',
-  'dragon_roar': 'Le dragon crache une belle flamme arc-en-ciel dans le ciel nocturne, des étincelles multicolores pleuvent.',
-  'dragon_rest': 'Blotti contre son ami, le dragon s\'endort paisiblement, son souffle forme de petites bulles lumineuses.',
+  'dragon_nest': 'Au sommet d\'une colline brumeuse, un gros œuf de dragon bleu repose sur un lit de feuilles de vigne magiques.',
+  'dragon_hatch': 'Un gentil dragon vert nommé Barnabé sort de sa coquille d\'azur, son arrosoir en bois à la patte.',
+  'dragon_sad': 'Barnabé le dragon est triste devant sa Tulipe de Lune fanée, ses larges ailes tombent mollement.',
+  'dragon_flight': 'Le dragon déploie ses grandes ailes et s\'élance dans le ciel orangé avec son ami sur le dos.',
+  'dragon_block': 'Un énorme rocher gris bouche la source d\'eau fraîche au sommet de la montagne, des mousses vertes le recouvrent.',
+  'dragon_laugh': 'L\'enfant chatouille le rocher grincheux qui se met à rire et à bouger, libérant enfin l\'eau.',
+  'dragon_bloom': 'La Tulipe de Lune s\'ouvre dans une lumière nacrée, illuminant toute la forêt de reflets argentés.',
   'dragon_moral': 'Le dragon et son ami regardent la lune se lever, leurs silhouettes se découpent sur le ciel étoilé.',
   'robot_cover': 'Couverture : un petit robot rouillé aux yeux bleus lumineux se tient dans un atelier d\'engrenages.',
-  'robot_meet': 'Dans un atelier en désordre, un petit robot nommé Barnabé cligne des yeux, ses boulons sont de travers.',
-  'robot_forest': 'Barnabé le robot marche dans une forêt verte, ses articulations métalliques grincent au soleil.',
-  'robot_pond': 'Penché sur un étang, Barnabé voit son reflet rouillé dans l\'eau claire, une libellule se pose sur son épaule.',
-  'robot_flower': 'Barnabé cueille une fleur des champs orange et la contemple, émerveillé par la beauté des couleurs naturelles.',
+  'robot_discover': 'Dans un atelier poussiéreux, un petit robot rouillé cligne de ses ampoules bleues, ses engrenages crissent doucement.',
+  'robot_dream': 'Barnabé le robot regarde par la fenêtre, ses yeux d\'ampoule rêvent de couleurs vives et de paysages pastel.',
+  'robot_dry': 'Devant lui, des pinceaux tout secs et cassés reposent sur une table en bois, la peinture est écaillée et grise.',
+  'robot_berries': 'Des bols de purée de fruits violets, oranges et roses sont alignés, remplis de couleurs naturelles éclatantes.',
   'robot_paint': 'Le robot peint un tableau, des éclaboussures de peinture de toutes les couleurs volent autour de lui.',
-  'robot_garden': 'Un jardin merveilleux où des fleurs métalliques brillent sous un ciel rose, Barnabé danse au milieu.',
+  'robot_alive': 'Le mur s\'anime, un arbre magique aux feuilles dorées sort de la fresque, des lucioles fluorescentes dansent autour.',
   'robot_happy': 'Le cœur métallique de Barnabé s\'illumine d\'un doux rose lumineux, ses yeux forment des arcs-en-ciel.',
   'robot_moral': 'Barnabé assis dans l\'herbe entouré de fleurs et de papillons, le cœur illuminé de mille couleurs.',
   'forest_cover': 'Couverture : un sentier qui serpente dans une forêt enchantée aux arbres aux troncs lumineux.',
@@ -94,9 +94,9 @@ export function matchThemeId(prompt: string): string {
     return 'forest';
   }
 
-  // Soft fallback: pick one deterministically based on title length
-  const index = p.length % 10;
-  const list = ['forest', 'space', 'pirate', 'dragon', 'castle', 'robot', 'princess', 'seasons', 'dog', 'tree'];
+  // Soft fallback: pick one that has a visual handler
+  const index = p.length % 5;
+  const list = ['forest', 'space', 'pirate', 'dragon', 'robot'];
   return list[index];
 }
 
@@ -104,7 +104,7 @@ export function matchThemeId(prompt: string): string {
 // 8 pages per story.
 export function generateStory(params: StoryParams): Story {
   const heroName = params.childName ? params.childName.trim() : 'Léo';
-  const themeId = matchThemeId(params.titleDescription);
+  let themeId = matchThemeId(params.titleDescription);
   
   const age = params.ageGroup;
   const style = params.illustrationStyle;
@@ -306,7 +306,7 @@ export function generateStory(params: StoryParams): Story {
       pageNumber: 8,
       text: getLessonMoral('pirate', heroName),
       illustrationSeed: `${themeId}_p8_${style.toLowerCase()}`,
-      backgroundClass: 'bg-gradient-to-b from-blue-955 to-slate-950',
+      backgroundClass: 'bg-gradient-to-b from-blue-950 to-slate-950',
       sceneType: 'pirate_moral'
     });
 
@@ -487,7 +487,8 @@ export function generateStory(params: StoryParams): Story {
     });
 
   } else {
-    // Default theme: forest ("La Forêt des Rêves Bleus")
+    // Default theme: forest ("La Forêt des Rêves Bleus") — utilisé aussi pour princess, castle, etc.
+    themeId = 'forest';
     title = `La Forêt Enchantée de ${heroName}`;
     coverImageSeed = 'forest_cover';
 
@@ -571,7 +572,7 @@ export function generateStory(params: StoryParams): Story {
       pageNumber: 8,
       text: getLessonMoral('forest', heroName),
       illustrationSeed: `${themeId}_p8_${style.toLowerCase()}`,
-      backgroundClass: 'bg-gradient-to-b from-emerald-955 to-slate-950',
+      backgroundClass: 'bg-gradient-to-b from-emerald-950 to-slate-950',
       sceneType: 'forest_moral'
     });
   }
@@ -588,7 +589,8 @@ export function generateStory(params: StoryParams): Story {
     params,
     pages: pagesWithDescription,
     heroName,
-    coverImageSeed
+    coverImageSeed,
+    themeId
   };
 }
 

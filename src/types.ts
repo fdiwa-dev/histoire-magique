@@ -28,6 +28,7 @@ export interface Story {
   pages: StoryPage[];
   heroName: string;
   coverImageSeed: string;
+  themeId: string;
 }
 
 export interface ExampleStory {

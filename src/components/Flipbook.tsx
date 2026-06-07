@@ -242,7 +242,7 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
               <div className="w-full max-w-[200px] h-[130px] rounded-xl border border-purple-500/20 bg-slate-900/60 overflow-hidden shadow-inner flex items-center justify-center p-2 relative">
                 <StoryIllustration
                   seed={story.coverImageSeed}
-                  themeId={story.params.titleDescription ? 'space' : 'forest'}
+                  themeId={story.themeId}
                   sceneType={story.pages[0].sceneType}
                   style={story.params.illustrationStyle}
                   childName={story.heroName}
@@ -284,7 +284,7 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                   {activePageData && (
                     <StoryIllustration
                       seed={activePageData.illustrationSeed}
-                      themeId={story.pages[0].sceneType.startsWith('space') ? 'space' : story.pages[0].sceneType.startsWith('pirate') ? 'pirate' : story.pages[0].sceneType.startsWith('dragon') ? 'dragon' : story.pages[0].sceneType.startsWith('robot') ? 'robot' : 'forest'}
+                      themeId={story.themeId}
                       sceneType={activePageData.sceneType}
                       style={story.params.illustrationStyle}
                       childName={story.heroName}
