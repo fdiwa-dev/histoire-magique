@@ -1,40 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut,
-  onAuthStateChanged,
-  User,
-} from 'firebase/auth';
-import { getFirebaseAuth } from '../lib/firebase';
+import React from 'react';
+import { useAuth } from '../lib/AuthContext';
 
 export default function FirebaseAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const auth = getFirebaseAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
-    });
-    return unsub;
-  }, []);
-
-  const handleLogin = async () => {
-    const auth = getFirebaseAuth();
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error('Auth error:', err);
-    }
-  };
-
-  const handleLogout = async () => {
-    const auth = getFirebaseAuth();
-    await signOut(auth);
-  };
+  const { user, loading, premium, login, logout } = useAuth();
 
   if (loading) {
     return (
@@ -59,8 +27,13 @@ export default function FirebaseAuth() {
         <span className="text-xs text-slate-300 truncate max-w-[100px]">
           {user.displayName || user.email}
         </span>
+        {premium && (
+          <span className="text-[9px] uppercase tracking-widest font-mono text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-full border border-amber-400/20">
+            Premium
+          </span>
+        )}
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className="text-[10px] uppercase tracking-wider text-pink-400 hover:text-pink-300 cursor-pointer"
         >
           Déconnexion
@@ -71,7 +44,7 @@ export default function FirebaseAuth() {
 
   return (
     <button
-      onClick={handleLogin}
+      onClick={login}
       className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-900/40 hover:bg-purple-800/50 text-xs font-semibold text-purple-200 rounded-xl border border-purple-500/20 transition-all active:scale-95 cursor-pointer"
     >
       <span>👤</span>

@@ -6,6 +6,7 @@ import LoadingScreen from './components/LoadingScreen';
 import Flipbook from './components/Flipbook';
 
 import FirebaseAuth from './components/FirebaseAuth';
+import { AuthProvider, useAuth } from './lib/AuthContext';
 import AccessibilityControls, { type AccessibilitySettings } from './components/AccessibilityControls';
 import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCheck, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -104,6 +105,7 @@ export default function App() {
   ];
 
   return (
+    <AuthProvider>
     <div id="housing_app" className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30 selection:text-purple-200">
       
       {/* MAGICAL FIXED STARS DECORATION */}
@@ -659,5 +661,6 @@ export default function App() {
 
 
     </div>
+    </AuthProvider>
   );
 }
