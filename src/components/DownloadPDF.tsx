@@ -103,7 +103,7 @@ function getPDFHTML(story: Story): string {
     robot: 'linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #2e1065 100%)',
     forest: 'linear-gradient(180deg, #0f172a 0%, #064e3b 50%, #166534 100%)',
   };
-  const theme = story.params?.theme || story.pages[0]?.sceneType?.split('_')[0] || 'forest';
+  const theme = story.themeId || story.pages[0]?.sceneType?.split('_')[0] || 'forest';
 
   let pagesHTML = '';
 
@@ -111,8 +111,8 @@ function getPDFHTML(story: Story): string {
   pagesHTML += `
     <div class="pdf-p" style="background:linear-gradient(135deg,#1e1b4b 0%,#0f172a 50%,#2e1065 100%);border:3px solid #a855f7;justify-content:center;">
       <div class="pdf-title">${escapeHTML(story.title)}</div>
-      <div class="pdf-subtitle">Une histoire illustrée pour ${escapeHTML(story.params?.heroName || 'toi')}</div>
-      <div class="pdf-meta">Âge : ${story.params?.age || '-'} · Style : ${story.params?.style || 'Réaliste'}</div>
+      <div class="pdf-subtitle">Une histoire illustrée pour ${escapeHTML(story.heroName || 'toi')}</div>
+      <div class="pdf-meta">Âge : ${story.params?.ageGroup || '-'} · Style : ${story.params?.illustrationStyle || 'Réaliste'}</div>
       <div class="pdf-label">✨ Histoire Magique</div>
     </div>`;
 
