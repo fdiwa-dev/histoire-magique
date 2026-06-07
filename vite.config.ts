@@ -7,6 +7,9 @@ export default defineConfig(() => {
   return {
     base: '/histoire-magique/',
     plugins: [react(), tailwindcss()],
+    build: {
+      target: 'es2015',
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
