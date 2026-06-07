@@ -19,6 +19,7 @@ export interface StoryPage {
   backgroundClass: string;
   sceneType: string;
   descriptionVisuelle: string; // description audio pour les enfants non-voyants
+  isPremium?: boolean; // scènes premium après les 8 premières gratuites
 }
 
 export interface Story {

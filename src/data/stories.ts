@@ -204,12 +204,14 @@ export function generateStory(params: StoryParams): Story {
     ];
 
     baseSpacePages.forEach((bp, index) => {
+      const pageNum = index + 1;
       pages.push({
-        pageNumber: index + 1,
+        pageNumber: pageNum,
         text: bp.text,
-        illustrationSeed: `${themeId}_p${index + 1}_${style.toLowerCase()}`,
+        illustrationSeed: `${themeId}_p${pages.length + 1}_${style.toLowerCase()}`,
         backgroundClass: bp.bg,
-        sceneType: bp.scene
+        sceneType: bp.scene,
+        isPremium: pageNum >= 4, // pages 4+ premium
       });
     });
 
@@ -219,7 +221,8 @@ export function generateStory(params: StoryParams): Story {
       text: getLessonMoral('space', heroName),
       illustrationSeed: `${themeId}_p8_${style.toLowerCase()}`,
       backgroundClass: 'bg-gradient-to-b from-purple-950 via-slate-900 to-indigo-950',
-      sceneType: 'space_moral'
+      sceneType: 'space_moral',
+      isPremium: true,
     });
 
   } else if (themeId === 'pirate') {
@@ -293,12 +296,14 @@ export function generateStory(params: StoryParams): Story {
     ];
 
     basePiratePages.forEach((bp, index) => {
+      const pageNum = index + 1;
       pages.push({
-        pageNumber: index + 1,
+        pageNumber: pageNum,
         text: bp.text,
-        illustrationSeed: `${themeId}_p${index + 1}_${style.toLowerCase()}`,
+        illustrationSeed: `${themeId}_p${pageNum}_${style.toLowerCase()}`,
         backgroundClass: bp.bg,
-        sceneType: bp.scene
+        sceneType: bp.scene,
+        isPremium: pageNum >= 4,
       });
     });
 
@@ -306,8 +311,9 @@ export function generateStory(params: StoryParams): Story {
       pageNumber: 8,
       text: getLessonMoral('pirate', heroName),
       illustrationSeed: `${themeId}_p8_${style.toLowerCase()}`,
-      backgroundClass: 'bg-gradient-to-b from-blue-950 to-slate-950',
-      sceneType: 'pirate_moral'
+      backgroundClass: 'bg-gradient-to-b from-blue-955 to-slate-950',
+      sceneType: 'pirate_moral',
+      isPremium: true,
     });
 
   } else if (themeId === 'dragon') {
@@ -381,12 +387,14 @@ export function generateStory(params: StoryParams): Story {
     ];
 
     baseDragonPages.forEach((bp, index) => {
+      const pageNum = index + 1;
       pages.push({
-        pageNumber: index + 1,
+        pageNumber: pageNum,
         text: bp.text,
-        illustrationSeed: `${themeId}_p${index + 1}_${style.toLowerCase()}`,
+        illustrationSeed: `${themeId}_p${pageNum}_${style.toLowerCase()}`,
         backgroundClass: bp.bg,
-        sceneType: bp.scene
+        sceneType: bp.scene,
+        isPremium: pageNum >= 4,
       });
     });
 
@@ -395,7 +403,8 @@ export function generateStory(params: StoryParams): Story {
       text: getLessonMoral('dragon', heroName),
       illustrationSeed: `${themeId}_p8_${style.toLowerCase()}`,
       backgroundClass: 'bg-gradient-to-b from-emerald-950 via-indigo-950 to-slate-900',
-      sceneType: 'dragon_moral'
+      sceneType: 'dragon_moral',
+      isPremium: true,
     });
 
   } else if (themeId === 'robot') {

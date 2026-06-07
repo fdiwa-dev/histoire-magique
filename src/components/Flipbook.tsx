@@ -12,6 +12,7 @@ interface FlipbookProps {
   onOpenPayment: (planName: string, price: string) => void;
   /** Mode accessibilité : lecture audio automatique */
   blindMode?: boolean;
+  isPremium?: boolean;
 }
 
 export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = false }: FlipbookProps) {
@@ -85,6 +86,12 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
 
   const nextPage = () => {
     if (currentPage < story.pages.length) {
+      const nextPageData = story.pages[currentPage]; // 0-indexed next
+      if (nextPageData?.isPremium && !isPremium) {
+        // Bloqué => ouvrir le paiement
+        onOpenPayment('Option PDF HD - Histoire Générée', '9.99');
+        return;
+      }
       setCurrentPage((prev) => prev + 1);
       playSoundEffect('page');
     } else {
@@ -296,6 +303,26 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                 <div className="absolute top-2 left-4 z-10 text-[10px] uppercase font-mono font-medium tracking-widest text-slate-300">
                   {story.title}
                 </div>
+
+                {activePageData?.isPremium && !isPremium && (
+                  <div className="absolute inset-0 z-20 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-amber-400/20 flex items-center justify-center border border-amber-400/30">
+                      <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-4a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    </div>
+                    <p className="text-amber-400 font-bold text-sm text-center px-4">
+                      Contenu Premium
+                    </p>
+                    <p className="text-slate-400 text-xs text-center px-6">
+                      Débloquez toutes les pages et fonctionnalités exclusives
+                    </p>
+                    <button
+                      onClick={() => onOpenPayment('Option PDF HD - Histoire Générée', '9.99')}
+                      className="mt-1 px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold uppercase tracking-wider"
+                    >
+                      Débloquer
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* RIGHT PAGE: STORY TEXT AND ACTION OPTIONS */}
@@ -392,6 +419,13 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                 <button
                   key={idx}
                   onClick={() => {
+                    if (idx > 0) {
+                      const targetPage = story.pages[idx - 1];
+                      if (targetPage?.isPremium && !isPremium) {
+                        onOpenPayment('Option PDF HD - Histoire Générée', '9.99');
+                        return;
+                      }
+                    }
                     setCurrentPage(idx);
                     playSoundEffect('page');
                   }}

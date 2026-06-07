@@ -19,6 +19,7 @@ declare global {
 }
 
 export default function App() {
+  const { premium: userPremium } = useAuth();
   const [appState, setAppState] = useState<'HOME' | 'LOADING' | 'STORY'>('HOME');
   const [generatedStory, setGeneratedStory] = useState<Story | null>(null);
 
@@ -592,6 +593,7 @@ export default function App() {
                 onRestart={handleRestart}
                 onOpenPayment={triggerPaymentFlow}
                 blindMode={accessibility.blindMode}
+                isPremium={userPremium}
               />
             </motion.div>
           )}
