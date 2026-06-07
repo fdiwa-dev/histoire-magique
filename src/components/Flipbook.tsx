@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Story } from '../types';
-import StoryIllustration from './StoryIllustration';
+import StoryIllustration from './StoryIllustrationWithPexels';
 import AudioReader from './AudioReader';
 import DownloadPDF from './DownloadPDF';
 import { ChevronLeft, ChevronRight, BookOpen, Volume2, Sparkles, AlertCircle } from 'lucide-react';
