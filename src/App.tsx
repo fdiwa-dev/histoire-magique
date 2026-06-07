@@ -5,6 +5,7 @@ import StoryForm from './components/StoryForm';
 import LoadingScreen from './components/LoadingScreen';
 import Flipbook from './components/Flipbook';
 
+import FirebaseAuth from './components/FirebaseAuth';
 import AccessibilityControls, { type AccessibilitySettings } from './components/AccessibilityControls';
 import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCheck, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -124,7 +125,8 @@ export default function App() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <FirebaseAuth />
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
             <Moon className="w-3.5 h-3.5 text-amber-400" />
             <span>Thème Twilight</span>
