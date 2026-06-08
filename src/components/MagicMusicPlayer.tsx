@@ -74,8 +74,8 @@ export default function MagicMusicPlayer({ appState }: Props) {
     }
   };
 
-  // Si l'autoplay a marché et on est en HOME, ne pas montrer le bouton
-  if (!autoplayBlocked && isPlaying && appState === 'HOME') return null;
+  // On montre toujours le bouton, comme ça l'utilisateur peut cliquer
+  // L'auto-play est tenté silencieusement au cas où
 
   return (
     <div className="fixed bottom-20 right-6 z-50 flex items-center gap-2">

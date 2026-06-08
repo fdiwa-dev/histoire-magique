@@ -146,9 +146,7 @@ export default function App() {
       {/* HEADER NAVIGATION */}
       <header id="app_header" className="w-full max-w-7xl mx-auto px-6 py-5 flex justify-between items-center relative z-10 border-b border-slate-900 bg-slate-950/40 backdrop-blur-md">
         <div className="flex items-center gap-2.5 group cursor-pointer" onClick={handleRestart}>
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-amber-400 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:rotate-12 transition-all">
-            <Sparkles className="w-5.5 h-5.5 text-slate-950" />
-          </div>
+          <img src="/histoire-magique/logo-hm.svg" alt="Histoire Magique" className="w-10 h-10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
           <span className="font-serif text-xl sm:text-2xl font-black bg-gradient-to-r from-slate-100 via-purple-300 to-amber-300 bg-clip-text text-transparent tracking-wide leading-none">
             Histoire Magique
           </span>
