@@ -15,7 +15,7 @@ interface FlipbookProps {
   isPremium?: boolean;
 }
 
-export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = false }: FlipbookProps) {
+export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = false, isPremium = false }: FlipbookProps) {
   const [currentPage, setCurrentPage] = useState<number>(0); // 0 = Cover, 1 to 8 = Story pages
   const [readAloudActive, setReadAloudActive] = useState<boolean>(false);
   const [showShareNotification, setShowShareNotification] = useState<boolean>(false);
