@@ -192,14 +192,26 @@ class PexelsImageProvider {
     }
   }
 
-  async getPageImage(themeId: string, sceneType: string, childName: string, style: string = 'Réaliste'): Promise<{ url: string; photographer: string; photographerUrl: string; alt: string } | null> {
-    const query = sceneToKeyword(themeId, sceneType, style, childName);
+  async getPageImage(themeId: string, sceneType: string, childName: string, style: string = 'Réaliste', pageText: string = ''): Promise<{ url: string; photographer: string; photographerUrl: string; alt: string } | null> {
+    let query: string;
+    if (pageText) {
+      // Extraire les mots-clés pertinents du texte de la page (max 60 chars)
+      const keywords = pageText
+        .replace(/[,.;:!?]/g, '')
+        .split(/\s+/)
+        .filter(w => w.length > 3)
+        .slice(0, 8)
+        .join(' ');
+      query = `${keywords} children illustration ${style}`;
+    } else {
+      query = sceneToKeyword(themeId, sceneType, style, childName);
+    }
     const photo = await this.search(query);
 
     if (!photo) return null;
 
     return {
-      url: photo.src.medium,
+      url: photo.src.large,
       photographer: photo.photographer,
       photographerUrl: photo.photographer_url,
       alt: photo.alt,
@@ -225,7 +237,7 @@ class PexelsImageProvider {
           if (photo) {
             return {
               idx: q.idx,
-              data: { url: photo.src.medium, photographer: photo.photographer, photographerUrl: photo.photographer_url, alt: photo.alt },
+              data: { url: photo.src.large, photographer: photo.photographer, photographerUrl: photo.photographer_url, alt: photo.alt },
             };
           }
           return null;

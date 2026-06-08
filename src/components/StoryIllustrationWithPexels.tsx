@@ -11,6 +11,8 @@ interface PexelsImageProps {
   style: IllustrationStyle;
   className?: string;
   childName?: string;
+  /** Texte de la page pour améliorer la recherche d'image */
+  pageText?: string;
 }
 
 export default function StoryIllustrationWithPexels({
@@ -20,6 +22,7 @@ export default function StoryIllustrationWithPexels({
   style,
   className = '',
   childName = 'Léo',
+  pageText = '',
 }: PexelsImageProps) {
   const [pexelsUrl, setPexelsUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,7 @@ export default function StoryIllustrationWithPexels({
     setUseFallback(false);
 
     pexelsProvider
-      .getPageImage(themeId, sceneType, childName, style)
+      .getPageImage(themeId, sceneType, childName, style, pageText)
       .then((img) => {
         if (cancelled) return;
         if (img) {
@@ -53,7 +56,7 @@ export default function StoryIllustrationWithPexels({
     return () => {
       cancelled = true;
     };
-  }, [themeId, sceneType, childName, style]);
+  }, [themeId, sceneType, childName, style, pageText]);
 
   if (loading) {
     return (

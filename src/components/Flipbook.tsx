@@ -317,6 +317,7 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                       sceneType={activePageData.sceneType}
                       style={story.params.illustrationStyle}
                       childName={story.heroName}
+                      pageText={activePageData.text}
                     />
                   )}
                 </div>
