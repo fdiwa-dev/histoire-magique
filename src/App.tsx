@@ -11,7 +11,6 @@ import AccessibilityControls, { type AccessibilitySettings } from './components/
 import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCheck, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useHomeAnimations } from './hooks/useHomeAnimations';
-import { MagicParticlesBg } from './hooks/useParticles';
 import StoryIllustration from './components/StoryIllustration';
 
 declare global {
@@ -116,9 +115,6 @@ export default function App() {
   return (
     <div id="housing_app" ref={appRef} className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30 selection:text-purple-200">
       
-      {/* 🧠 PARTICULES MAGIQUES GSAP */}
-      <MagicParticlesBg containerRef={appRef as React.RefObject<HTMLDivElement>} density={15} />
-
       {/* MAGICAL FIXED STARS DECORATION */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
         <div className="absolute top-[10%] left-[15%] w-1.5 h-1.5 bg-yellow-300 rounded-full float-star"></div>
