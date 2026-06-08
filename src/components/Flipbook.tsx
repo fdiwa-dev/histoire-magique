@@ -84,12 +84,14 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
     }
   };
 
+  const [showPremiumPopup, setShowPremiumPopup] = useState<boolean>(false);
+
   const nextPage = () => {
     if (currentPage < story.pages.length) {
       const nextPageData = story.pages[currentPage]; // 0-indexed next
       if (nextPageData?.isPremium && !isPremium) {
-        // Bloqué => ouvrir le paiement
-        onOpenPayment('Option PDF HD - Histoire Générée', '9.99');
+        // Bloqué => afficher popup premium
+        setShowPremiumPopup(true);
         return;
       }
       setCurrentPage((prev) => prev + 1);
@@ -400,6 +402,70 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
           )}
         </AnimatePresence>
       </div>
+
+      {/* PREMIUM LOCK POPUP */}
+      <AnimatePresence>
+        {showPremiumPopup && (
+          <motion.div
+            id="premium_lock_overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+            onClick={() => setShowPremiumPopup(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-slate-900 border border-purple-500/10 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl relative"
+            >
+              <div className="h-1.5 bg-gradient-to-r from-amber-400 via-pink-500 to-purple-500"></div>
+              
+              <div className="p-8 text-center flex flex-col items-center">
+                <div className="w-16 h-16 bg-amber-400/10 rounded-full flex items-center justify-center border border-amber-400/30 mb-4">
+                  <svg className="w-8 h-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-4a2 2 0 00-2-2H6a2 2 0 00-2 2v4a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+
+                <h2 className="font-serif text-2xl font-bold text-amber-400 mb-2">
+                  La suite est magique ✨
+                </h2>
+                <p className="text-sm text-slate-300 mb-2">
+                  Cette page et les suivantes sont réservées à la version complète.
+                </p>
+                <p className="text-xs text-slate-400 mb-6 max-w-xs">
+                  Soutenez Histoire Magique et débloquez l'intégralité du livre illustré, le PDF haute définition, et la version audio narrée.
+                </p>
+
+                <div className="flex flex-col gap-3 w-full">
+                  <button
+                    onClick={() => {
+                      setShowPremiumPopup(false);
+                      onOpenPayment('Option PDF HD - Histoire Générée', '9.99');
+                    }}
+                    className="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs uppercase tracking-widest shadow-lg shadow-amber-400/10 transition-all cursor-pointer"
+                  >
+                    Débloquer l'histoire complète — 9,99 €
+                  </button>
+                  <button
+                    onClick={() => setShowPremiumPopup(false)}
+                    className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    Continuer à feuilleter les pages gratuites
+                  </button>
+                </div>
+
+                <p className="text-[9px] text-slate-500 mt-4 font-mono">
+                  Paiement sécurisé via Lemon Squeezy
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Story progression bar / Navigation helpers */}
       <div id="navigation_controls" className="w-full max-w-xl flex flex-col items-center gap-4 px-4">
