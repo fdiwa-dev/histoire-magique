@@ -48,9 +48,21 @@ export default function App() {
 
   const handleStartCreation = (params: StoryParams) => {
     setAppState('LOADING');
-    // Save story data immediately so the loader loads it
-    const story = generateStory(params);
-    setGeneratedStory(story);
+    try {
+      const story = generateStory(params);
+      setGeneratedStory(story);
+    } catch (e) {
+      console.error('Erreur génération histoire:', e);
+      // Fallback : utiliser la première histoire du catalogue
+      const fallback = generateStory({
+        titleDescription: 'Un chevalier courageux',
+        childName: params.childName || 'Enfant',
+        ageGroup: params.ageGroup || '5-7',
+        illustrationStyle: params.illustrationStyle || 'rl',
+        lesson: params.lesson || 'courage'
+      });
+      setGeneratedStory(fallback);
+    }
   };
 
   const handleLoadingComplete = () => {
@@ -71,7 +83,6 @@ export default function App() {
   };
 
   const triggerPaymentFlow = (planName: string, price: string) => {
-    // Liens Lemon Squeezy directs
     const LINKS: Record<string, string> = {
       "Option PDF HD - Histoire Générée": "https://miniqueue.lemonsqueezy.com/checkout/buy/6178d682-2bbb-496d-b993-e3b40fa307f3",
       "Formule Livre Imprimé Cartonné": "https://miniqueue.lemonsqueezy.com/checkout/buy/eecc1ed4-0cb8-4621-969b-56513010ab5f",
@@ -79,7 +90,11 @@ export default function App() {
     };
     const url = LINKS[planName];
     if (url) {
-      window.open(url, '_blank');
+      // Fallback : si window.open est bloqué, on redirige la page
+      const w = window.open(url, '_blank');
+      if (!w || w.closed || typeof w.closed === 'undefined') {
+        window.location.href = url;
+      }
     }
   };
 
