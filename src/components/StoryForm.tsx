@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StoryParams, AgeGroup, IllustrationStyle, LessonType } from '../types';
 import { PencilLine, Sparkles, Smile, Compass, BookOpen, Wand2 } from 'lucide-react';
+import { useStoryFormAnimations } from '../hooks/useStoryFormAnimations';
 
 interface StoryFormProps {
   onSubmit: (params: StoryParams) => void;
@@ -8,6 +9,8 @@ interface StoryFormProps {
 }
 
 export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  useStoryFormAnimations(formRef);
   const [titleDescription, setTitleDescription] = useState<string>('');
   const [childName, setChildName] = useState<string>('');
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('5-7');
@@ -47,6 +50,7 @@ export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
 
   return (
     <form
+      ref={formRef}
       id="story_personalization_form"
       onSubmit={handleFormSubmit}
       className="w-full bg-slate-900/50 border border-purple-500/10 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl shadow-indigo-500/5 relative"
@@ -56,7 +60,7 @@ export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
 
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 bg-purple-500/15 rounded-xl flex items-center justify-center border border-purple-500/30">
-          <Wand2 className="w-5 h-5 text-purple-400 animate-pulse" />
+          <Wand2 className="magic-wand-icon w-5 h-5 text-purple-400" />
         </div>
         <div>
           <h2 className="font-serif text-2xl font-bold text-slate-100">
@@ -69,7 +73,7 @@ export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
       </div>
 
       {/* Input 1: Story Description / Prompt */}
-      <div className="mb-6">
+      <div className="story-field-group mb-6">
         <label htmlFor="description_input" className="block text-sm font-semibold text-slate-200 mb-2 flex items-center justify-between">
           <span className="flex items-center gap-1.5">
             <PencilLine className="w-4 h-4 text-purple-400" />
@@ -118,7 +122,7 @@ export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
       </div>
 
       {/* Split Column layout: Child Name + Age Group */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="story-field-group-row grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Child Name (Optional) */}
         <div>
           <label htmlFor="child_name_input" className="block text-sm font-semibold text-slate-200 mb-2 flex items-center gap-1.5">
@@ -174,7 +178,7 @@ export default function StoryForm({ onSubmit, isGenerating }: StoryFormProps) {
       </div>
 
       {/* Illustration Styles Selection */}
-      <div className="mb-6">
+      <div className="story-field-group mb-6">
         <span className="block text-sm font-semibold text-slate-200 mb-3 flex items-center gap-1.5">
           <BookOpen className="w-4 h-4 text-emerald-400" />
           Style d'illustration artistique de l'IA
