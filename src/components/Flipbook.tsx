@@ -85,16 +85,27 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
   };
 
   const [showPremiumPopup, setShowPremiumPopup] = useState<boolean>(false);
+  const [premiumDismissed, setPremiumDismissed] = useState<boolean>(false);
+
+  // 🔒 Popup automatique à la page 4 (0-indexed: currentPage === 3)
+  useEffect(() => {
+    if (currentPage === 3 && !isPremium && !premiumDismissed) {
+      setShowPremiumPopup(true);
+    }
+  }, [currentPage, isPremium, premiumDismissed]);
 
   const nextPage = () => {
     if (currentPage < story.pages.length) {
       const nextPageData = story.pages[currentPage]; // 0-indexed next
+      // 🔒 Blocage : pas de navigation vers une page premium si pas payé
       if (nextPageData?.isPremium && !isPremium) {
-        // Bloqué => afficher popup premium
         setShowPremiumPopup(true);
         return;
       }
       setCurrentPage((prev) => prev + 1);
+      if (currentPage >= 3 && !isPremium) {
+        setPremiumDismissed(false); // réactiver le popup à la prochaine page premium
+      }
       playSoundEffect('page');
     } else {
       // Completed, play chime
@@ -460,7 +471,10 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                     Débloquer l'histoire complète — 9,99 €
                   </button>
                   <button
-                    onClick={() => setShowPremiumPopup(false)}
+                    onClick={() => {
+                      setShowPremiumPopup(false);
+                      setPremiumDismissed(true);
+                    }}
                     className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
                   >
                     Continuer à feuilleter les pages gratuites
