@@ -12,6 +12,7 @@ import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCh
 import { motion, AnimatePresence } from 'motion/react';
 import { useHomeAnimations } from './hooks/useHomeAnimations';
 import StoryIllustration from './components/StoryIllustration';
+import MagicMusicPlayer from './components/MagicMusicPlayer';
 
 declare global {
   interface Window {
@@ -682,6 +683,9 @@ export default function App() {
           CONÇU PAR VOTRE CODE GÉNÉRATOR DE CONFIANCE EN GIRONDE • VERSION 1.2
         </div>
       </footer>
+
+      {/* 🎵 Music Player */}
+      <MagicMusicPlayer />
 
       {/* Panneau d'accessibilité flottant pour tous les états */}
       <AccessibilityControls onSettingsChange={handleAccessibilityChange} />
