@@ -34,7 +34,7 @@ const ELEVENLABS_API_KEY = 'sk_3ee…007';
 const ELEVENLABS_VOICE_ID = 'EXAVITQu4vr4xnSDxMaL'; // Sarah — voix naturelle douce
 
 /** Charge un son depuis ElevenLabs via TTS */
-async // Actuellement désactivé — nécessite une clé ElevenLabs valide
+// Actuellement desactive — necessite une cle ElevenLabs valide
 async function fetchElevenLabsAudio(
   text: string,
   voiceId: string = ELEVENLABS_VOICE_ID
