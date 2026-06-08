@@ -5,11 +5,6 @@ import AudioReader from './AudioReader';
 import DownloadPDF from './DownloadPDF';
 import { ChevronLeft, ChevronRight, BookOpen, Volume2, Sparkles, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { gsap } from 'gsap';
-import { useGSAP } from '@gsap/react';
-
-// Enregistrer les plugins GSAP nécessaires
-gsap.registerPlugin(useGSAP);
 
 interface FlipbookProps {
   story: Story;
@@ -161,37 +156,6 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
 
   const activePageData = currentPage > 0 ? story.pages[currentPage - 1] : null;
 
-  // Animation GSAP : apparition du flipbook
-  const flipbookRef = useRef<HTMLDivElement>(null);
-  const pageRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (!flipbookRef.current) return;
-    // Animation d'entrée du flipbook
-    gsap.fromTo(flipbookRef.current,
-      { opacity: 0, y: 40, scale: 0.95, transformOrigin: 'center center' },
-      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out' }
-    );
-    // Éléments décoratifs qui flottent
-    gsap.to('#flipbook_container .deco-star', {
-      y: -6,
-      duration: 2.5 + Math.random(),
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-      stagger: 0.3,
-    });
-  }, { scope: flipbookRef, dependencies: [story.id] });
-
-  // Animation de transition de page
-  useEffect(() => {
-    if (!pageRef.current) return;
-    gsap.fromTo(pageRef.current,
-      { opacity: 0, rotationY: 5, transformPerspective: 1000 },
-      { opacity: 1, rotationY: 0, duration: 0.4, ease: 'power2.out' }
-    );
-  }, [currentPage]);
-
   return (
     <div id="flipbook_container" className="w-full flex flex-col items-center">
       {/* Top action bar */}
@@ -319,9 +283,11 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
             <motion.div
               id="open_spread_view"
               key={`page_${currentPage}`}
-              ref={pageRef}
+              initial={{ rotateY: 15, opacity: 0 }}
+              animate={{ rotateY: 0, opacity: 1 }}
+              exit={{ rotateY: -15, opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
               className="w-full h-full bg-[#faf6ef] text-[#2c221e] rounded-2xl shadow-2xl flex flex-col md:grid md:grid-cols-2 overflow-hidden border-t-2 border-r border-b-4 border-l border-orange-100 relative"
-              style={{ opacity: 0, transformPerspective: 1000 }}
             >
               {/* Realistic book spine shadow in the center (desktop only) */}
               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-8 -ml-4 bg-gradient-to-r from-black/10 via-black/25 to-black/10 z-20 pointer-events-none"></div>
