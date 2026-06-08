@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '../lib/AuthContext';
 
 export default function FirebaseAuth() {
-  const { user, loading, premium, login, logout } = useAuth();
+  const { user, loading, premium, login, logout, error } = useAuth();
 
   if (loading) {
     return (
@@ -43,12 +43,19 @@ export default function FirebaseAuth() {
   }
 
   return (
-    <button
-      onClick={login}
-      className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-900/40 hover:bg-purple-800/50 text-xs font-semibold text-purple-200 rounded-xl border border-purple-500/20 transition-all active:scale-95 cursor-pointer"
-    >
-      <span>👤</span>
-      Espace membres
-    </button>
+    <div className="flex flex-col items-end gap-1">
+      <button
+        onClick={login}
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-900/40 hover:bg-purple-800/50 text-xs font-semibold text-purple-200 rounded-xl border border-purple-500/20 transition-all active:scale-95 cursor-pointer"
+      >
+        <span>👤</span>
+        Espace membres
+      </button>
+      {error && (
+        <div className="text-[9px] text-pink-400 bg-pink-900/20 px-2 py-1 rounded-lg max-w-[220px] text-right leading-tight">
+          {error}
+        </div>
+      )}
+    </div>
   );
 }
