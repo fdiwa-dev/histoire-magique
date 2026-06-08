@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Story } from '../types';
 import StoryIllustration from './StoryIllustrationWithPexels';
 import AudioReader from './AudioReader';
 import DownloadPDF from './DownloadPDF';
 import { ChevronLeft, ChevronRight, BookOpen, Volume2, Sparkles, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+// Enregistrer les plugins GSAP nécessaires
+gsap.registerPlugin(useGSAP);
 
 interface FlipbookProps {
   story: Story;
@@ -156,6 +161,37 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
 
   const activePageData = currentPage > 0 ? story.pages[currentPage - 1] : null;
 
+  // Animation GSAP : apparition du flipbook
+  const flipbookRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!flipbookRef.current) return;
+    // Animation d'entrée du flipbook
+    gsap.fromTo(flipbookRef.current,
+      { opacity: 0, y: 40, scale: 0.95, transformOrigin: 'center center' },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out' }
+    );
+    // Éléments décoratifs qui flottent
+    gsap.to('#flipbook_container .deco-star', {
+      y: -6,
+      duration: 2.5 + Math.random(),
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+      stagger: 0.3,
+    });
+  }, { scope: flipbookRef, dependencies: [story.id] });
+
+  // Animation de transition de page
+  useEffect(() => {
+    if (!pageRef.current) return;
+    gsap.fromTo(pageRef.current,
+      { opacity: 0, rotationY: 5, transformPerspective: 1000 },
+      { opacity: 1, rotationY: 0, duration: 0.4, ease: 'power2.out' }
+    );
+  }, [currentPage]);
+
   return (
     <div id="flipbook_container" className="w-full flex flex-col items-center">
       {/* Top action bar */}
@@ -235,6 +271,14 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
               {/* Cover background pattern */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(251,191,36,0.15)_0%,_transparent_65%)]"></div>
 
+              {/* ✨ Étoiles décoratives flottantes GSAP */}
+              <div className="absolute top-4 left-4 w-2 h-2 bg-amber-400 rounded-full shadow-lg shadow-amber-400/50 deco-star"></div>
+              <div className="absolute top-8 right-8 w-1.5 h-1.5 bg-purple-400 rounded-full shadow-lg shadow-purple-400/50 deco-star"></div>
+              <div className="absolute bottom-20 left-6 w-1.5 h-1.5 bg-pink-400 rounded-full shadow-lg shadow-pink-400/50 deco-star"></div>
+              <div className="absolute top-1/3 right-4 w-2 h-2 bg-amber-300 rounded-full shadow-lg shadow-amber-300/50 deco-star"></div>
+              <div className="absolute bottom-1/3 left-3 w-1 h-1 bg-blue-300 rounded-full shadow-lg shadow-blue-300/50 deco-star"></div>
+              <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-emerald-300 rounded-full shadow-lg shadow-emerald-300/50 deco-star"></div>
+
               <div className="mt-6 flex flex-col items-center">
                 <div className="w-16 h-16 bg-amber-400/10 rounded-full flex items-center justify-center border border-amber-400/30 mb-4 animate-pulse">
                   <Sparkles className="w-8 h-8 text-amber-400" />
@@ -275,10 +319,9 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
             <motion.div
               id="open_spread_view"
               key={`page_${currentPage}`}
-              initial={{ rotateY: 15, opacity: 0 }}
-              animate={{ rotateY: 0, opacity: 1 }}
-              exit={{ rotateY: -15, opacity: 0 }}
+              ref={pageRef}
               className="w-full h-full bg-[#faf6ef] text-[#2c221e] rounded-2xl shadow-2xl flex flex-col md:grid md:grid-cols-2 overflow-hidden border-t-2 border-r border-b-4 border-l border-orange-100 relative"
+              style={{ opacity: 0, transformPerspective: 1000 }}
             >
               {/* Realistic book spine shadow in the center (desktop only) */}
               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-8 -ml-4 bg-gradient-to-r from-black/10 via-black/25 to-black/10 z-20 pointer-events-none"></div>

@@ -10,6 +10,7 @@ import { useAuth } from './lib/AuthContext';
 import AccessibilityControls, { type AccessibilitySettings } from './components/AccessibilityControls';
 import { Sparkles, ArrowRight, BookOpen, Star, HelpCircle, Heart, Mail, ShieldCheck, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useHomeAnimations } from './hooks/useHomeAnimations';
 import StoryIllustration from './components/StoryIllustration';
 
 declare global {
@@ -107,15 +108,19 @@ export default function App() {
     }
   ];
 
+  // Réf container pour les animations GSAP
+  const appRef = useRef<HTMLDivElement>(null);
+  useHomeAnimations(appRef);
+
   return (
-    <div id="housing_app" className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30 selection:text-purple-200">
+    <div id="housing_app" ref={appRef} className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-purple-500/30 selection:text-purple-200">
       
       {/* MAGICAL FIXED STARS DECORATION */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
-        <div className="absolute top-[10%] left-[15%] w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse"></div>
-        <div className="absolute top-[40%] right-[10%] w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-[20%] left-[8%] w-1 h-1 bg-blue-300 rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute bottom-[45%] right-[25%] w-2 h-2 bg-pink-400 rounded-full animate-pulse opacity-50" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-[10%] left-[15%] w-1.5 h-1.5 bg-yellow-300 rounded-full float-star"></div>
+        <div className="absolute top-[40%] right-[10%] w-1.5 h-1.5 bg-purple-400 rounded-full float-star"></div>
+        <div className="absolute bottom-[20%] left-[8%] w-1 h-1 bg-blue-300 rounded-full float-star"></div>
+        <div className="absolute bottom-[45%] right-[25%] w-2 h-2 bg-pink-400 rounded-full float-star opacity-50"></div>
       </div>
 
       {/* HEADER NAVIGATION */}
@@ -159,22 +164,22 @@ export default function App() {
               className="w-full"
             >
               {/* 1. HERO SECTION */}
-              <section id="hero_section" className="max-w-7xl mx-auto px-6 pt-12 pb-20 text-center flex flex-col items-center relative">
+              <section id="hero_section" data-scroll-section className="max-w-7xl mx-auto px-6 pt-12 pb-20 text-center flex flex-col items-center relative">
                 {/* Floating alert discount highlight */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-semibold mb-6 animate-pulse">
+                <div id="hero_badge" data-scroll-item className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-semibold mb-6 animate-pulse">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Enchantez sa bibliothèque dès ce soir</span>
                 </div>
 
-                <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-black max-w-4xl tracking-tight leading-tight text-white select-none">
+                <h1 id="hero_title" data-scroll-item className="font-serif text-4xl sm:text-5xl md:text-6xl font-black max-w-4xl tracking-tight leading-tight text-white select-none">
                   L'histoire parfaite pour votre enfant, <span className="bg-gradient-to-r from-amber-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">en 30 secondes</span>
                 </h1>
                 
-                <p className="font-sans text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mt-6 leading-relaxed">
+                <p id="hero_subtitle" data-scroll-item className="font-sans text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mt-6 leading-relaxed">
                   Personnalisez un conte merveilleux à son nom avec des leçons de morale sur-mesure et des styles d'illustrations uniques. Créez un prototype de livre virtuel à feuilleter instantanément !
                 </p>
 
-                <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                <div id="hero_buttons" className="mt-10 flex flex-col sm:flex-row gap-4">
                   <button
                     id="hero_cta_btn"
                     onClick={scrollToConfigurator}
@@ -253,7 +258,7 @@ export default function App() {
               </section>
 
               {/* 3. EXPERIENCE FORM CONFIGURATOR PANEL */}
-              <section id="configurateur" ref={configuratorRef} className="max-w-4xl mx-auto px-6 py-12 scroll-mt-24">
+              <section id="configurateur" data-scroll-section ref={configuratorRef} className="max-w-4xl mx-auto px-6 py-12 scroll-mt-24">
                 <div className="text-center mb-8">
                   <span className="text-xs font-mono font-bold uppercase tracking-widest text-purple-400">Atelier à Sortilèges</span>
                   <h2 className="font-serif text-3xl sm:text-4xl font-bold mt-1 text-slate-100">
@@ -334,7 +339,7 @@ export default function App() {
               </section>
 
               {/* 5. SPECIFIC SECTION "POURQUOI NOUS" */}
-              <section id="why_us" className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900 relative">
+              <section id="why_us" data-scroll-section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900 relative">
                 <div className="text-center mb-16">
                   <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-100">
                     Pourquoi choisir Histoire Magique ?
@@ -344,9 +349,9 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="features_grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Card 1 */}
-                  <div id="feature_1" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
+                  <div data-scroll-item id="feature_1" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
                     <div className="text-2xl mb-3 font-bold select-none text-purple-400">🎯</div>
                     <h4 className="font-serif text-base font-bold text-slate-100 mb-2">100% Personnalisé</h4>
                     <p className="text-xs text-slate-400 leading-relaxed">
@@ -354,7 +359,7 @@ export default function App() {
                     </p>
                   </div>
                   {/* Card 2 */}
-                  <div id="feature_2" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
+                  <div data-scroll-item id="feature_2" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
                     <div className="text-2xl mb-3 font-bold select-none text-amber-400">⚡</div>
                     <h4 className="font-serif text-base font-bold text-slate-100 mb-2">Génération Flash</h4>
                     <p className="text-xs text-slate-400 leading-relaxed">
@@ -362,7 +367,7 @@ export default function App() {
                     </p>
                   </div>
                   {/* Card 3 */}
-                  <div id="feature_3" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
+                  <div data-scroll-item id="feature_3" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
                     <div className="text-2xl mb-3 font-bold select-none text-emerald-400">🌸</div>
                     <h4 className="font-serif text-base font-bold text-slate-100 mb-2">Art Dédié Bespoke</h4>
                     <p className="text-xs text-slate-400 leading-relaxed">
@@ -370,7 +375,7 @@ export default function App() {
                     </p>
                   </div>
                   {/* Card 4 */}
-                  <div id="feature_4" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
+                  <div data-scroll-item id="feature_4" className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 hover:border-purple-500/10 transition-all flex flex-col">
                     <div className="text-2xl mb-3 font-bold select-none text-blue-400">⭐</div>
                     <h4 className="font-serif text-base font-bold text-slate-100 mb-2">Valeurs Fortes</h4>
                     <p className="text-xs text-slate-400 leading-relaxed">
@@ -423,7 +428,7 @@ export default function App() {
               </section>
 
               {/* 7. SPECIFIC SECTION "PRIX" */}
-              <section id="prix" className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900 scroll-mt-24">
+              <section id="prix" data-scroll-section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900 scroll-mt-24">
                 <div className="text-center mb-16">
                   <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-100">
                     Tarifs clairs, sans abonnement
@@ -433,9 +438,9 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                <div id="pricing_grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
                   {/* Plan 1 */}
-                  <div id="pricing_plan_1" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                  <div data-scroll-item id="pricing_plan_1" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
                     <div>
                       <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-1 rounded-full font-mono uppercase font-bold">Flipbook de démo</span>
                       <h4 className="font-serif text-xl font-bold text-slate-200 mt-3">Écran Gratuit</h4>
@@ -462,7 +467,7 @@ export default function App() {
                   </div>
 
                   {/* Plan 2 */}
-                  <div id="pricing_plan_2" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                  <div data-scroll-item id="pricing_plan_2" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
                     <div>
                       <span className="text-[10px] bg-purple-900/40 text-purple-300 px-2 py-1 rounded-full font-mono uppercase font-bold">Prestige Numérique</span>
                       <h4 className="font-serif text-xl font-bold text-slate-200 mt-3">PDF Haute Définition</h4>
@@ -489,7 +494,7 @@ export default function App() {
                   </div>
 
                   {/* Plan 3 - Highlighted Best Seller */}
-                  <div id="pricing_plan_3" className="bg-slate-900/70 p-6 rounded-2xl border-2 border-amber-400 relative flex flex-col justify-between hover:scale-[1.01] transition-all shadow-xl shadow-amber-400/5">
+                  <div data-scroll-item id="pricing_plan_3" className="bg-slate-900/70 p-6 rounded-2xl border-2 border-amber-400 relative flex flex-col justify-between hover:scale-[1.01] transition-all shadow-xl shadow-amber-400/5">
                     {/* Best-seller visual tag */}
                     <div className="absolute top-0 right-6 transform -translate-y-1/2 bg-amber-400 text-slate-950 font-mono font-bold text-[9px] uppercase tracking-wider py-1 px-2.5 rounded-full shadow-md">
                       Le Cadeau Préféré 👑
@@ -522,7 +527,7 @@ export default function App() {
                   </div>
 
                   {/* Plan 4 */}
-                  <div id="pricing_plan_4" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                  <div data-scroll-item id="pricing_plan_4" className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
                     <div>
                       <span className="text-[10px] bg-indigo-900/40 text-indigo-300 px-2 py-1 rounded-full font-mono uppercase font-bold">Pack Fratrie Complice</span>
                       <h4 className="font-serif text-xl font-bold text-slate-200 mt-3">Pack Duo Impérial</h4>
