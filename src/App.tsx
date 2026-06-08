@@ -683,7 +683,7 @@ export default function App() {
       </footer>
 
       {/* 🎵 Music Player */}
-      <MagicMusicPlayer />
+      <MagicMusicPlayer appState={appState} />
 
       {/* Panneau d'accessibilité flottant pour tous les états */}
       <AccessibilityControls onSettingsChange={handleAccessibilityChange} />
