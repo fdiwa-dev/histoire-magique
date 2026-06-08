@@ -26,45 +26,25 @@ export default function DownloadPDF({ story }: DownloadPDFProps) {
       const html2pdf = mod.default || (mod as any).html2pdf || (mod as any);
       const filename = `${story.title.replace(/[^a-zA-Z0-9\u00C0-\u024F\s-]/g, '').trim().replace(/\s+/g, '_')}.pdf`;
 
-      // Conteneur temporaire pour le rendu PDF
+      // Conteneur temporaire pour le rendu PDF — visible mais hors écran
       const container = document.createElement('div');
-      container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;';
+      container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;z-index:-1;';
       container.innerHTML = getPDFHTML(story);
       document.body.appendChild(container);
 
-      // Attendre le rendu
-      await new Promise((r) => setTimeout(r, 1000));
+      // Attendre que les polices et styles s'appliquent
+      await new Promise((r) => setTimeout(r, 500));
 
-      // Générer le PDF
-      const worker = html2pdf().set({
-        margin: [0, 0, 0, 0],
+      // Générer le PDF avec html2pdf
+      const opt = {
+        margin:       0,
         filename,
-        image: { type: 'jpeg', quality: 0.9 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-          backgroundColor: '#0f172a',
-          logging: false,
-        },
-        jsPDF: {
-          unit: 'px',
-          format: [800, 1100],
-          orientation: 'portrait',
-        },
-      }).from(container);
+        image:        { type: 'jpeg', quality: 0.95 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#0f172a', logging: false },
+        jsPDF:        { unit: 'px', format: [800, 1100], orientation: 'portrait' },
+      };
 
-      const blob = await worker.outputPdf('blob');
-
-      // Télécharger
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      await html2pdf().set(opt).from(container).save();
 
       document.body.removeChild(container);
       setDone(true);
