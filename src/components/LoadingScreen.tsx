@@ -1,124 +1,103 @@
 import { useState, useEffect } from 'react';
-import { Sparkles, Wand2, Compass } from 'lucide-react';
-import { motion } from 'motion/react';
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [progress, setProgress] = useState<number>(0);
-  const [quoteIndex, setQuoteIndex] = useState<number>(0);
+const MAGICAL_STEPS = [
+  'Écoute des souhaits des enfants…',
+  'Préparation de la potion magique…',
+  'Sélection des personnages enchantés…',
+  'Tissage des mots féeriques…',
+  'Illumination des couleurs merveilleuses…',
+  'Enfants et créatures fabuleuses en chemin…',
+  'Assemblage des ingrédients du rêve…',
+  'Derrière le voile de l’imaginaire…',
+  'Les étoiles alignent l’histoire…',
+  'Pose des derniers scintillements…',
+  'Votre histoire prend vie…',
+  'Prêt pour la lecture enchantée ✨',
+];
 
-  const MAGICAL_STEPS = [
-    "Dépoussiérage du grimoire aux histoires secrètes...",
-    "Recherche d'inspiration auprès des petits lutins de la forêt...",
-    "Tracé des premiers croquis à l'encre d'étoile dorée...",
-    "Harmonisation de la palette d'aquarelles douces...",
-    "Chuchotement des dialogues aux oreilles des personnages...",
-    "Génération et séchage des illustrations magiques...",
-    "Reliure de l'ouvrage avec un délicat fil de lune argenté...",
-    "Saupoudrage de paillettes d'IA bienveillante...",
-    "Dernier coup de baguette pour illuminer la couverture...",
-    "Reliure achevée ! Ouverture du chef-d'œuvre..."
-  ];
+export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
+  const [progress, setProgress] = useState(0);
+  const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
-    // Increment progress periodically over ~12 seconds
-    const intervalTime = 120; // total around 12 seconds
-    const progressTimer = setInterval(() => {
+    // Simule 3 secondes max de chargement
+    const totalDuration = 3000; // 3 secondes
+    const step = 100 / (totalDuration / 30); // ~30ms par tick
+
+    const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(progressTimer);
-          setTimeout(() => {
-            onComplete();
-          }, 300);
+          clearInterval(timer);
           return 100;
         }
-        return prev + 1;
+        return prev + step;
       });
-    }, intervalTime);
+    }, 30);
 
-    // Rotate magical step text every 1.2s to look highly reactive and creative
     const quoteTimer = setInterval(() => {
       setQuoteIndex((prev) => (prev + 1) % MAGICAL_STEPS.length);
     }, 1200);
 
     return () => {
-      clearInterval(progressTimer);
+      clearInterval(timer);
       clearInterval(quoteTimer);
     };
-  }, [onComplete]);
+  }, []);
+
+  // Quand progress atteint 100, onComplete
+  useEffect(() => {
+    if (progress >= 100) {
+      const t = setTimeout(() => onComplete(), 300);
+      return () => clearTimeout(t);
+    }
+  }, [progress, onComplete]);
 
   return (
     <div
       id="magical_loader_canvas"
-      className="w-full flex flex-col items-center justify-center min-h-[420px] p-6 text-center text-slate-100 relative"
+      className="w-full flex flex-col items-center justify-center py-16 text-center"
+      role="status"
+      aria-live="polite"
     >
-      {/* Background magical pulse */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(168,85,247,0.06)_0%,_transparent_60%)] pointer-events-none"></div>
+      {/* Fond étincelles animées */}
+      <div className="relative mb-10 flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-purple-500/5 to-pink-400/5 rounded-full blur-3xl animate-pulse" style={{ width: 200, height: 200 }}></div>
 
-      {/* Rotating Magic Circle Symbol */}
-      <div className="relative w-36 h-36 mb-8 flex items-center justify-center">
-        {/* Outer Rotating Glyph */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 border-2 border-dashed border-amber-400/30 rounded-full"
-        />
-        {/* Inner Counter-rotating Glyph */}
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-3 border border-purple-500/20 rounded-full flex items-center justify-center"
-        >
-          <Compass className="w-12 h-12 text-purple-400/40" />
-        </motion.div>
-        
-        {/* Core Pulsing Magic Wand */}
-        <div className="absolute bg-slate-950/80 p-5 rounded-full border border-amber-400 shadow-xl shadow-amber-400/15">
-          <Wand2 className="w-8 h-8 text-amber-400 animate-bounce" />
+        {/* Icône livre magique */}
+        <div className="relative w-24 h-24 bg-slate-800/60 rounded-2xl flex items-center justify-center border border-amber-400/20 shadow-lg">
+          <svg className="w-12 h-12 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
         </div>
 
-        {/* Floating tiny sparks */}
-        <div className="absolute top-2 right-2 animate-ping">
-          <Sparkles className="w-4 h-4 text-emerald-300 opacity-60" />
-        </div>
-        <div className="absolute bottom-4 left-2 animate-ping" style={{ animationDelay: '0.4s' }}>
-          <Sparkles className="w-4 h-4 text-pink-300 opacity-60" />
-        </div>
+        {/* Anneaux orbitaux */}
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-amber-400/30 animate-spin" style={{ width: 180, height: 180, animationDuration: '3s' }}></div>
+        <div className="absolute inset-0 rounded-full border border-transparent border-r-purple-400/20 animate-spin" style={{ width: 200, height: 200, animationDuration: '4s', animationDirection: 'reverse' }}></div>
       </div>
 
-      <h3 className="font-serif text-2xl font-bold text-amber-400 tracking-wide mb-1 flex items-center gap-2">
-        Mélange d'enchantement en cours...
-      </h3>
-      <p id="magic_step_text" className="text-xs text-purple-200/90 max-w-sm h-10 font-medium italic select-none">
-        {MAGICAL_STEPS[quoteIndex]}
-      </p>
+      {/* Texte magique */}
+      <p className="text-lg font-serif text-slate-200 animate-pulse mb-4">{MAGICAL_STEPS[quoteIndex]}</p>
 
-      {/* Numerical and visual indicator progress bar */}
-      <div className="w-full max-w-sm bg-slate-950 p-1.5 rounded-full border border-slate-800/80 mt-6 shadow-inner">
+      {/* Barre de progression */}
+      <div className="w-64 h-1.5 bg-slate-800 rounded-full overflow-hidden">
         <div
-          id="loading_progress_bar_fill"
-          className="h-3 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-400 rounded-full transition-all duration-100 relative"
-          style={{ width: `${progress}%` }}
-        >
-          {/* Glowing particle head */}
-          <div className="absolute right-0 top-0 bottom-0 w-3 bg-white rounded-full shadow-lg shadow-white animate-pulse"></div>
-        </div>
+          className="h-full bg-gradient-to-r from-amber-400 via-purple-400 to-pink-400 rounded-full transition-all duration-150 ease-linear"
+          style={{ width: `${Math.min(progress, 100)}%` }}
+        ></div>
       </div>
 
-      <div className="text-[10px] font-mono text-slate-500 mt-2 tracking-widest uppercase">
-        Enchantement à {progress}% raccordé
-      </div>
+      <p className="text-xs text-slate-500 mt-2 font-mono">{Math.round(progress)}%</p>
 
-      {/* Interactive Skip Button */}
+      {/* Skip button */}
       <button
-        id="skip_loading_btn"
         onClick={onComplete}
-        className="mt-8 px-4 py-2 text-xs font-mono tracking-wider font-semibold opacity-70 hover:opacity-100 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-all cursor-pointer"
+        className="mt-6 text-[11px] text-slate-400 underline underline-offset-2 hover:text-slate-200 transition-all cursor-pointer"
       >
-        ⏩ Sauter l'attente (Sortilège accéléré)
+        Passer la magie →
       </button>
     </div>
   );
