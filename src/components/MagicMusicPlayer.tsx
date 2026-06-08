@@ -1,11 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-export default function MagicMusicPlayer() {
+interface Props {
+  /** 'HOME' | 'LOADING' | 'STORY' — la musique s'arrête quand on passe en STORY */
+  appState: string;
+}
+
+export default function MagicMusicPlayer({ appState }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showPlayer, setShowPlayer] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const barsRef = useRef<HTMLDivElement>(null);
+  const attemptedRef = useRef(false);
+
+  const base = import.meta.env.BASE_URL || '/';
+  const audioSrc = `${base}audio/histoire-magique-theme.mp3`;
 
   // Animation des barres d'égaliseur
   useEffect(() => {
@@ -31,6 +40,30 @@ export default function MagicMusicPlayer() {
     }
   }, [isPlaying]);
 
+  // Auto-play dès l'arrivée (avec gestion du blocage navigateur)
+  useEffect(() => {
+    if (attemptedRef.current) return;
+    attemptedRef.current = true;
+
+    if (!audioRef.current) return;
+    const audio = audioRef.current;
+
+    audio.play().then(() => {
+      setIsPlaying(true);
+    }).catch(() => {
+      // Autoplay bloqué par le navigateur → on affiche le bouton
+      setAutoplayBlocked(true);
+    });
+  }, []);
+
+  // Arrêter la musique quand l'histoire est générée (STORY ou LOADING)
+  useEffect(() => {
+    if ((appState === 'STORY' || appState === 'LOADING') && isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
+  }, [appState, isPlaying]);
+
   const togglePlay = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -41,24 +74,19 @@ export default function MagicMusicPlayer() {
     }
   };
 
-  useEffect(() => {
-    // Afficher le player avec un délai pour pas gêner le chargement
-    const t = setTimeout(() => setShowPlayer(true), 2000);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (!showPlayer) return null;
+  // Si l'autoplay a marché et on est en HOME, ne pas montrer le bouton
+  if (!autoplayBlocked && isPlaying && appState === 'HOME') return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2">
+    <div className="fixed bottom-20 right-6 z-50 flex items-center gap-2">
       <audio
         ref={audioRef}
-        src="/histoire-magique/audio/histoire-magique-theme.mp3"
+        src={audioSrc}
         loop
         preload="metadata"
       />
 
-      {/* Bouton play/pause principal */}
+      {/* Bouton play/pause */}
       <button
         onClick={togglePlay}
         className="relative w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-purple-600 shadow-xl shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-110 transition-all duration-300 flex items-center justify-center group cursor-pointer"
@@ -66,15 +94,17 @@ export default function MagicMusicPlayer() {
         title="Musique Histoire Magique"
       >
         {/* Égaliseur animé */}
-        <div ref={barsRef} className="absolute -top-6 left-1/2 -translate-x-1/2 flex items-end gap-[2px] h-5">
-          {[1,2,3,4].map(i => (
-            <div
-              key={i}
-              className="eq-bar w-[3px] bg-amber-400/70 rounded-full"
-              style={{ height: '16px', transformOrigin: 'bottom', scaleY: 0.3 }}
-            />
-          ))}
-        </div>
+        {isPlaying && (
+          <div ref={barsRef} className="absolute -top-6 left-1/2 -translate-x-1/2 flex items-end gap-[2px] h-5">
+            {[1,2,3,4].map(i => (
+              <div
+                key={i}
+                className="eq-bar w-[3px] bg-amber-400/70 rounded-full"
+                style={{ height: '16px', transformOrigin: 'bottom', scaleY: 0.3 }}
+              />
+            ))}
+          </div>
+        )}
 
         {isPlaying ? (
           <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
