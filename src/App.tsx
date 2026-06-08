@@ -47,21 +47,25 @@ export default function App() {
   const configuratorRef = useRef<HTMLDivElement>(null);
 
   const handleStartCreation = (params: StoryParams) => {
-    setAppState('LOADING');
     try {
+      setAppState('LOADING');
       const story = generateStory(params);
+      if (!story || !story.pages || story.pages.length === 0) {
+        throw new Error('Histoire générée vide');
+      }
       setGeneratedStory(story);
     } catch (e) {
-      console.error('Erreur génération histoire:', e);
-      // Fallback : utiliser la première histoire du catalogue
+      console.error('Erreur handleStartCreation:', e);
+      alert('Erreur : ' + (e as Error).message + '. Utilisation du mode secours.');
       const fallback = generateStory({
         titleDescription: 'Un chevalier courageux',
         childName: params.childName || 'Enfant',
         ageGroup: params.ageGroup || '5-7',
-        illustrationStyle: params.illustrationStyle || 'rl',
-        lesson: params.lesson || 'courage'
+        illustrationStyle: 'rl',
+        lesson: 'courage'
       });
       setGeneratedStory(fallback);
+      setAppState('STORY'); // skip loader
     }
   };
 
