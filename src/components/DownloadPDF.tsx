@@ -29,7 +29,7 @@ export default function DownloadPDF({ story }: DownloadPDFProps) {
       // Conteneur temporaire pour le rendu PDF
       const container = document.createElement('div');
       container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;';
-      innerHTML = getPDFHTML(story);
+      container.innerHTML = getPDFHTML(story);
       document.body.appendChild(container);
 
       // Attendre le rendu
