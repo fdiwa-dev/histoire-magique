@@ -87,28 +87,23 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
   const [showPremiumPopup, setShowPremiumPopup] = useState<boolean>(false);
   const [premiumDismissed, setPremiumDismissed] = useState<boolean>(false);
 
-  // 🔒 Popup automatique à la page 4 (0-indexed: currentPage === 3)
-  useEffect(() => {
-    if (currentPage === 3 && !isPremium && !premiumDismissed) {
-      setShowPremiumPopup(true);
-    }
-  }, [currentPage, isPremium, premiumDismissed]);
-
   const nextPage = () => {
     if (currentPage < story.pages.length) {
-      const nextPageData = story.pages[currentPage]; // 0-indexed next
-      // 🔒 Blocage : pas de navigation vers une page premium si pas payé
-      if (nextPageData?.isPremium && !isPremium) {
+      const nextIdx = currentPage + 1;
+      if (nextIdx > story.pages.length) {
+        playSoundEffect('magic');
+        return;
+      }
+      const pageData = story.pages[nextIdx - 1];
+      if (pageData?.isPremium && !isPremium) {
+        // Page premium en mode gratuit → popup
         setShowPremiumPopup(true);
         return;
       }
-      setCurrentPage((prev) => prev + 1);
-      if (currentPage >= 3 && !isPremium) {
-        setPremiumDismissed(false); // réactiver le popup à la prochaine page premium
-      }
+      // Page gratuite ou mode premium → on y va
+      setCurrentPage(nextIdx);
       playSoundEffect('page');
     } else {
-      // Completed, play chime
       playSoundEffect('magic');
     }
   };
@@ -474,7 +469,21 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                   <button
                     onClick={() => {
                       setShowPremiumPopup(false);
-                      setPremiumDismissed(true);
+                      // Chercher la prochaine page gratuite et y aller
+                      let found = false;
+                      for (let i = currentPage; i < story.pages.length; i++) {
+                        if (!story.pages[i].isPremium) {
+                          // currentPage est 1-indexé, story.pages est 0-indexé
+                          // Si on est sur la page 4 (currentPage=4), on cherche à partir de story.pages[3]
+                          setCurrentPage(i + 1);
+                          found = true;
+                          break;
+                        }
+                      }
+                      if (!found) {
+                        // Toutes les pages restantes sont premium
+                        setPremiumDismissed(true);
+                      }
                     }}
                     className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
                   >
@@ -512,7 +521,8 @@ export default function Flipbook({ story, onRestart, onOpenPayment, blindMode = 
                     if (idx > 0) {
                       const targetPage = story.pages[idx - 1];
                       if (targetPage?.isPremium && !isPremium) {
-                        onOpenPayment('Option PDF HD - Histoire Générée', '9.99');
+                        // En mode gratuit, montrer le popup au lieu d'ouvrir le paiement
+                        setShowPremiumPopup(true);
                         return;
                       }
                     }
